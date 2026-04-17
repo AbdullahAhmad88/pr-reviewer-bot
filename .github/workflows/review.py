@@ -20,7 +20,15 @@ diff_response = requests.get(
     f"https://api.github.com/repos/{REPO}/pulls/{PR_NUMBER}",
     headers={**HEADERS, "Accept": "application/vnd.github.diff"}
 )
-diff = diff_response.text[:8000]  # Limit to avoid token limits
+diff = diff_response.text
+
+if len(diff) < 100:
+    print("PR diff too small, skipping review.")
+    exit(0)
+
+if len(diff) > 15000:
+    diff = diff[:15000]
+    print("Warning: diff truncated to 15,000 chars")
 
 # ── 2. Send to Gemini ────────────────────────────────────
 print("Sending to Gemini for review...")
