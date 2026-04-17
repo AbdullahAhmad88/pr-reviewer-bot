@@ -25,17 +25,28 @@ diff = diff_response.text[:8000]  # Limit to avoid token limits
 # ── 2. Send to Gemini ────────────────────────────────────
 print("Sending to Gemini for review...")
 
-prompt = f"""You are a senior software engineer doing a code review.
-Analyze this pull request diff and provide feedback on:
-1. Bugs or logic errors
-2. Security vulnerabilities  
-3. Code quality improvements
-4. Performance issues
+prompt = f"""You are a senior software engineer reviewing a pull request.
 
-Be specific, reference line numbers when possible, and be constructive.
-Format your response in clear sections with markdown.
+Review the following diff and structure your response EXACTLY like this:
 
-Here is the diff:
+## Summary
+One paragraph overview of what this PR does.
+
+## 🐛 Bugs Found
+List any bugs. If none, write "No bugs found."
+
+## 🔒 Security Issues  
+List security vulnerabilities (SQL injection, hardcoded secrets, etc). If none, write "None found."
+
+## 💡 Suggestions
+List code quality, performance, or readability improvements.
+
+## ✅ What's Done Well
+Mention 1-2 positive things about the code.
+
+Be specific with line numbers from the diff when possible.
+
+DIFF:
 {diff}"""
 
 gemini_response = requests.post(
